@@ -99,4 +99,25 @@ presets = {
     'allon' :{
         'On' : list(groups.keys()),
     },
+    'mainspaceon' : {
+        'Off' : [],
+        'On' : ['general','craft','audio','makerlane','av','audio'],      
+    },
+    'auxspaceon' : {
+        'Off' : [],
+        'On' : ['soldering','powerwest','lightwest'],
+    },
+    'social' : {
+        'Off' : [],
+        'On' : ['general','craft','airfan','audio','lightwest','displays','av','audio','soldering','powerwest','makerlane'],
+    },
+    'presentation' : {
+        'Off' : GROUP_LIGHTS + ['airfan'],
+        'On' : ['audio'],
+    },
+    'vacuuming' : {
+        'Off' : [],
+        'On' : GROUP_LIGHTS,
+    },
+ 
 }
