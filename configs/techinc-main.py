@@ -34,6 +34,7 @@ make_bar(FIRST_BAR, 'LIGHT_TABLE', 5)
 make_bar(FIRST_BAR, 'LIGHT_CRAFT', 6)
 make_bar(FIRST_BAR, 'LIGHT_ENTRANCE', 7)
 make_bar(FIRST_BAR, 'LIGHT_KITCHEN', 8)
+make_bar(FIRST_BAR, 'LIGHT_WHEEL', 9)
 make_bar(FIRST_BAR, 'LIGHT_SOFA', 10)
 
 make_bar(FIRST_BAR, 'AUDIO_AMPLIFIER', 13)
@@ -61,7 +62,7 @@ make_bar(AUX_BAR, 'W_LIGHT_GLASS')
 
 
 groups = {
-    'general' : [LIGHT_ENTRANCE, LIGHT_KITCHEN, LIGHT_SOFA, LIGHT_TABLE],
+    'general' : [LIGHT_ENTRANCE, LIGHT_KITCHEN, LIGHT_SOFA, LIGHT_TABLE, LIGHT_WHEEL],
     'craft'   : [LIGHT_CRAFT],
     'audio' : [AUDIO_AMPLIFIER, AUDIO_MIXER],
     'displays' : [MONITOR_AV_1, MONITOR_AV_2, MONITOR_3D_1, MONITOR_3D_2],
@@ -73,6 +74,7 @@ groups = {
     'tlwest'    : [W_LIGHT_TL_DOOR],
     'makerlane' : [LIGHT_MAKERLANE, LIGHT_MAKERTABLE, MONITOR_3D_1,
                    MONITOR_3D_2],
+    'airfan'    : [W_AIR_FAN],
 }
 
 
