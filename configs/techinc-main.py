@@ -11,7 +11,7 @@ from httpbar import HTTPPowerBar
 bars = []
 
 FIRST_BAR = BayTechPowerBar('/dev/ttyS0', name='MLP')
-AUX_BAR = HTTPPowerBar(host='http://10.0.20.41:5000', name='AUX')
+AUX_BAR = HTTPPowerBar(host='http://powerbar2.ti:5000', name='AUX')
 
 bars += [
     FIRST_BAR,
@@ -57,23 +57,31 @@ make_bar(AUX_BAR, 'W_AIR_FAN')
 make_bar(AUX_BAR, 'W_LIGHT_TABLE')
 make_bar(AUX_BAR, 'W_LIGHT_TL_DOOR')
 make_bar(AUX_BAR, 'W_LIGHT_SOLDER')
-make_bar(AUX_BAR, 'W_LIGHT_THEATER')
+make_bar(AUX_BAR, 'W_LIGHT_SOLDER_2')
 make_bar(AUX_BAR, 'W_LIGHT_GLASS')
 
 
+# Groups make it easier to handle multiple sockets - they are refcounted
+# so enabled both 'general' and 'lightwest' will make all the shared sockets
+# have a refcount of 'two'. Just disabling the 'general' socket will not
+# actually turn off shared sockets. If the global IGNORE_REFCOUNT boolean is set
+# however, they are just turned off.
 groups = {
     'general' : [LIGHT_ENTRANCE, LIGHT_KITCHEN, LIGHT_SOFA, LIGHT_TABLE, LIGHT_WHEEL],
     'craft'   : [LIGHT_CRAFT],
+
     'audio' : [AUDIO_AMPLIFIER, AUDIO_MIXER],
     'displays' : [MONITOR_AV_1, MONITOR_AV_2, MONITOR_3D_1, MONITOR_3D_2],
     'av' : [MONITOR_AV_1, MONITOR_AV_2],
-
-    'soldering' : [W_POWER_NW_TABLE, W_POWER_SW_TABLE, W_LIGHT_SOLDER],
-    'powerwest' : [W_POWER_NW_TABLE, W_POWER_MAIN_TABLE, W_POWER_SW_TABLE, W_POWER_PILLAR],
-    'lightwest' : [W_LIGHT_TABLE, W_LIGHT_THEATER, W_LIGHT_GLASS, W_LIGHT_SOLDER],
-    'tlwest'    : [W_LIGHT_TL_DOOR],
+    'lighteast' : [LIGHT_MAKERLANE, LIGHT_MAKERTABLE, LIGHT_TABLE, LIGHT_CRAFT,
+                   LIGHT_ENTRANCE, LIGHT_KITCHEN, LIGHT_WHEEL, LIGHT_SOFA],
     'makerlane' : [LIGHT_MAKERLANE, LIGHT_MAKERTABLE, MONITOR_3D_1,
                    MONITOR_3D_2],
+
+    'soldering' : [W_POWER_NW_TABLE, W_POWER_SW_TABLE, W_LIGHT_SOLDER, W_LIGHT_SOLDER_2],
+    'powerwest' : [W_POWER_NW_TABLE, W_POWER_MAIN_TABLE, W_POWER_SW_TABLE, W_POWER_PILLAR],
+    'lightwest' : [W_LIGHT_TABLE, W_LIGHT_GLASS, W_LIGHT_SOLDER, W_LIGHT_SOLDER_2],
+    'tlwest'    : [W_LIGHT_TL_DOOR],
     'airfan'    : [W_AIR_FAN],
 }
 
@@ -82,11 +90,13 @@ groups_state = {}
 for _ in groups.keys():
     groups_state[_] = None
 
-GROUPS_LIGHT = ['general', 'makerlane', 'lightwest', 'tlwest', 'craft']
+GROUPS_LIGHT = ['general', 'makerlane', 'lightwest', 'craft']
 
+# Presets will execute 'On' and 'Off', always. Regardless of the parameters. So
+# you cannot 'turn on/off' a preset.
 presets = {
     'lightsoff' : {
-        'Off' : GROUPS_LIGHT + ['airfan'],
+        'Off' : GROUPS_LIGHT + ['airfan'] + ['tlwest'],
         'On' : [],
     },
     'lightson' : {
@@ -101,7 +111,7 @@ presets = {
     },
     'mainspaceon' : {
         'Off' : [],
-        'On' : ['general','craft','audio','makerlane','av','audio'],      
+        'On' : ['general','craft','audio','makerlane','av','audio'],
     },
     'auxspaceon' : {
         'Off' : [],
@@ -112,12 +122,11 @@ presets = {
         'On' : ['general','craft','airfan','audio','lightwest','displays','av','audio','soldering','powerwest','makerlane'],
     },
     'presentation' : {
-        'Off' : GROUP_LIGHTS + ['airfan'],
+        'Off' : GROUPS_LIGHT + ['airfan'],
         'On' : ['audio'],
     },
     'vacuuming' : {
         'Off' : [],
-        'On' : GROUP_LIGHTS,
+        'On' : GROUPS_LIGHT,
     },
- 
 }

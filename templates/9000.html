@@ -21,6 +21,8 @@ form:last-child fieldset { margin-bottom: 0; }
 </style></head>
 
 <body>
+    <h1> For the other room see the other<a href="http://10.0.20.61:5000/">Interface</a></h1>
+
     <div class="row">
         <div class="medium-4 large-3 medium-centered small-uncentered columns text-center">
 
@@ -94,6 +96,41 @@ form:last-child fieldset { margin-bottom: 0; }
 
             <form method="POST" action="/group/displays" target="status">
                 <fieldset><legend>Displays</legend>
+                    <input class="button small alert" type="submit" name="state" value="Off">
+                    <input class="button small" type="submit" name="state" value="On">
+                </fieldset>
+            </form>
+
+            <form method="POST" action="/group/sofa" target="status">
+                <fieldset><legend>Sofa</legend>
+                    <input class="button small alert" type="submit" name="state" value="Off">
+                    <input class="button small" type="submit" name="state" value="On">
+                </fieldset>
+            </form>
+
+            <form method="POST" action="/group/audio" target="status">
+                <fieldset><legend>Audio</legend>
+                    <input class="button small alert" type="submit" name="state" value="Off">
+                    <input class="button small" type="submit" name="state" value="On">
+                </fieldset>
+            </form>
+
+            <form method="POST" action="/group/kitchen" target="status">
+                <fieldset><legend>Kitchen</legend>
+                    <input class="button small alert" type="submit" name="state" value="Off">
+                    <input class="button small" type="submit" name="state" value="On">
+                </fieldset>
+            </form>
+
+            <form method="POST" action="/group/lightwest" target="status">
+                <fieldset><legend>Light west</legend>
+                    <input class="button small alert" type="submit" name="state" value="Off">
+                    <input class="button small" type="submit" name="state" value="On">
+                </fieldset>
+            </form>
+
+            <form method="POST" action="/group/powerwest" target="status">
+                <fieldset><legend>Power west</legend>
                     <input class="button small alert" type="submit" name="state" value="Off">
                     <input class="button small" type="submit" name="state" value="On">
                 </fieldset>

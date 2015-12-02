@@ -67,8 +67,8 @@ class BayTechPowerSocket(VirtualPowerSocket):
     def set_state(self, state):
         s = 'On' if state else 'Off'
         self.state = state
-        print('Setting', self.name, 'to', s)
+        #print('Setting', self.name, 'to', s)
         m = '%s %d\r\n' % (s, self.ident)
-        print('Writing:', repr(m))
+        #print('Writing:', repr(m))
         r = write_read(self.bar.s, m)
-        print('Read:', repr(r))
+        #print('Read:', repr(r))

@@ -14,6 +14,7 @@ import time
 hack_time = time.time() - 120.
 
 ALLOW_GET = False  # True to allow GET requests
+IGNORE_REFCOUNT = True
 
 
 class InputException(Exception):
@@ -38,7 +39,8 @@ def group_set_state(group, socket, state):
     else:
         if group in socket.refcount:
             socket.refcount.remove(group)
-        if len(socket.refcount) == 0:
+
+        if IGNORE_REFCOUNT or len(socket.refcount) == 0:
             socket.set_state(state)
 
 
@@ -76,7 +78,7 @@ def print_state():
     s = ""
     for bar in bars:
         for socket in bar.sockets.values():
-            s += '%d is at count: %s\n' % (socket.name, str(socket.refcount))
+            s += '%s is at count: %s\n' % (socket.name, str(socket.refcount))
 
     for k, v in groups_state.iteritems():
         s += '%s: %s\n' % (k, str(v))
@@ -111,7 +113,8 @@ def all():
         return json.dumps(b)
 
 
-@app.route("/<bar>/<port>", methods=['GET', 'POST'])
+@app.route("/<bar>/<port>", methods=['POST'])
+#@app.route("/<bar>/<port>", methods=['GET', 'POST'])
 def powerbar_iname_pname(bar, port):
     for idx, b in enumerate(bars):
         if b.name == bar:
@@ -121,6 +124,9 @@ def powerbar_iname_pname(bar, port):
 
                     hack_reset_bars()
                     socket.set_state(state)
+
+                    if 'echo' in request.form and request.form['echo'].lower() == 'off':
+                        return 'Yes'
 
                     return render_template('main-nojs.html', bars=bars,
                                            groups=groups,
@@ -153,6 +159,10 @@ def powerbar_g(group):
             for socket in groups[group]:
                 group_set_state(group, socket, state)
 
+        if 'echo' in request.form and request.form['echo'].lower() == 'off':
+            return 'Yes'
+
+
         # return render_template('status_back.html', msg='%s is %s' % (group,
         #                       'On' if state else 'Off'))
         return render_template('main-nojs.html', bars=bars, groups=groups,
@@ -164,12 +174,19 @@ def powerbar_g(group):
                                (group, 'On' if state else 'Off'))
 
 
+@app.route("/keepactive", methods=['GET'])
+def keepactive():
+    global hack_time
+    hack_time = time.time()
+    for bar in bars:
+        if hasattr(bar, 'reset_bar'):
+            bar.reset_bar()
+
+    return 'Success'
+
+
 @app.route("/preset/<preset>", methods=['GET', 'POST'])
 def powerbar_p(preset):
-    # if request.method == 'GET':
-    #    pass
-    # else:
-
     if preset not in presets:
         return 'Invalid preset'  # TODO: Error code
 
@@ -182,10 +199,13 @@ def powerbar_p(preset):
                 for socket in groups[group]:
                     group_set_state(group, socket, state)
 
-    # print_state()
 
     # return render_template('status_back.html',
     #        msg='Prefix is %s' % preset)
+
+    if 'echo' in request.form and request.form['echo'].lower() == 'off':
+        return 'Yes'
+
     return render_template('main-nojs.html', bars=bars, groups=groups,
                            presets=presets, filter=filter,
                            sort=lambda y: sorted(y, key=lambda x: x.name),
@@ -211,4 +231,5 @@ if __name__ == "__main__":
                 resetserial(bar.s.port)
 
     app.run(host='::', port=5000)
+    #app.run(host='::', port=5000, debug=True)
     # app.run(host='0.0.0.0')
