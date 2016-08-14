@@ -214,8 +214,11 @@ def powerbar_p(preset):
                            msg='Prefix is %s' % preset)
 
 
-from reset import resetserial
-RESET = True
+try:
+    from reset import resetserial
+    RESET = True
+except ImportError:
+    RESET = False
 
 from bar import BayTechPowerBar
 

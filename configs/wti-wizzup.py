@@ -18,11 +18,19 @@ def make_bar(bar, name, ident=None):
     globals()[name] = __s
     bar.sockets[name] = __s
 
-make_bar(WTI_BAR, 'LIGHT_DESK', 1)
+make_bar(WTI_BAR, 'PRINTER', 1)
+make_bar(WTI_BAR, 'DESK_POWER', 2)
+make_bar(WTI_BAR, 'TV_LACK', 3)
+make_bar(WTI_BAR, 'DESK_LIGHT', 4)
+make_bar(WTI_BAR, 'G5', 5)
+make_bar(WTI_BAR, 'G6', 6)
+make_bar(WTI_BAR, 'G7', 7)
+make_bar(WTI_BAR, 'G8', 8)
+
 
 
 groups = {
-    'lights' : [LIGHT_DESK],
+    'lights' : [DESK_LIGHT],
 }
 
 groups_state = {}
