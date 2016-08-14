@@ -6,6 +6,8 @@ from telnetlib import Telnet
 
 from vbar import VirtualPowerSocket, VirtualPowerBar
 
+import time
+
 TIMEOUT = 5. # Quite high; but this is a lot more stable.
 
 class WTIPowerBar(VirtualPowerBar):
@@ -30,13 +32,26 @@ class WTIPowerSocket(VirtualPowerSocket):
         tel = Telnet(self.bar.host)
 
         try:
+            time.sleep(2.)
+
+            garbage = tel.read_very_eager()
+            print('GarbageRead:', garbage)
+
             w = "/%s %d" % (s, self.ident)
             msg = w.encode('ascii') + b"\r\n"
             print("Writing:", repr(msg))
             tel.write(msg)
 
-            print("Reading:", repr(tel.read_until("NPS>")))
+            print("Reading:", repr(tel.read_until("NPS>", timeout=5)))
+
+            time.sleep(1.)
+            garbage = tel.read_very_eager()
+            print('GarbageRead2:', garbage)
 
             self.state = state
         finally:
             tel.close()
+
+        del tel
+
+        time.sleep(0.5)
